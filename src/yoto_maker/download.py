@@ -44,9 +44,23 @@ def _read_catalog(csv_path: str) -> list[dict[str, str]]:
     Returns:
         List of dicts with keys: track_number, title, url.
     """
-    with open(csv_path, newline="", encoding="utf-8") as f:
+    with open(csv_path, newline="", encoding="utf-8-sig") as f:
         reader = csv.DictReader(f)
-        return list(reader)
+        reader.fieldnames = [name.strip() for name in reader.fieldnames]
+        tracks = list(reader)
+
+    if not tracks:
+        raise SystemExit(f"No tracks found in {csv_path}")
+
+    required = {"title", "url"}
+    actual = set(tracks[0].keys())
+    missing = required - actual
+    if missing:
+        raise SystemExit(
+            f"CSV is missing columns: {missing}. Found columns: {sorted(actual)}"
+        )
+
+    return tracks
 
 
 def _download_single(url: str, title: str, output_dir: str) -> None:
