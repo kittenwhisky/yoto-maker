@@ -10,7 +10,7 @@ def main() -> None:
     """Launch the interactive yoto-maker menu."""
     print("\nWelcome to Yoto Card Maker!\n")
 
-    action = inquirer.select(
+    action = inquirer.rawlist(
         message="What would you like to do?",
         choices=[
             {"name": "Catalog a YouTube playlist", "value": "catalog"},

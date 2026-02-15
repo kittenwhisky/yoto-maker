@@ -45,6 +45,12 @@ Key decisions made during project planning. Future Claude sessions should append
 | yt-dlp JS runtime | Node.js via `js_runtimes: {"node": {}}` | YouTube now requires a JavaScript runtime for player challenge solving. Node.js is already installed on the dev machine. yt-dlp only enables `deno` by default. |
 | yt-dlp EJS solver | `remote_components: {"ejs:github"}` | yt-dlp needs the EJS challenge solver script to extract YouTube formats. This option auto-downloads it from GitHub on first use. |
 
+## CLI UX Enhancements (2026-02-15)
+
+| Decision | Choice | Rationale |
+|----------|--------|-----------|
+| Menu prompt type | `inquirer.rawlist` instead of `inquirer.select` | Prepends numbered labels (`1)`, `2)`) to menu options and lets users type a number or use arrow keys to select. Matches the numbered menu UX shown in the PRD. |
+
 ## Naming
 
 | Decision | Choice | Rationale |
