@@ -13,6 +13,9 @@ def download_tracks(csv_path: str, output_dir: str) -> None:
     row via yt-dlp, converts to MP3 using ffmpeg, and saves as {title}.mp3 in
     the output directory. Individual failures are printed and skipped.
 
+    After all tracks are attempted, prints an error report and writes an error
+    CSV containing only the failed rows.
+
     Args:
         csv_path: Path to the validated CSV catalog file.
         output_dir: Directory where MP3 files will be saved (created if needed).
@@ -21,6 +24,7 @@ def download_tracks(csv_path: str, output_dir: str) -> None:
 
     tracks = _read_catalog(csv_path)
     total = len(tracks)
+    failures = []
 
     print(f"Downloading {total} tracks...")
 
@@ -33,6 +37,45 @@ def download_tracks(csv_path: str, output_dir: str) -> None:
             print(f"  [{i}/{total}] {title} \u2713")
         except Exception as exc:
             print(f"  [{i}/{total}] {title} \u2717 {exc}")
+            failures.append((track, str(exc)))
+
+    if failures:
+        _print_error_report(failures, total)
+        _write_error_csv(csv_path, failures)
+    else:
+        print(f"\nAll {total} tracks downloaded successfully!")
+
+
+def _print_error_report(failures: list[tuple[dict, str]], total: int) -> None:
+    """Print a summary of failed downloads to the terminal."""
+    print(f"\n--- Error Report ---")
+    print(f"{len(failures)} of {total} tracks failed:\n")
+    for track, error in failures:
+        print(f"  {track['title']}")
+        print(f"    URL:   {track['url']}")
+        print(f"    Error: {error}\n")
+
+
+def _write_error_csv(
+    original_csv_path: str, failures: list[tuple[dict, str]]
+) -> None:
+    """Write a CSV containing only the failed tracks.
+
+    The file is saved next to the original CSV with ' - error report' appended
+    to the stem.
+    """
+    stem, _ = os.path.splitext(original_csv_path)
+    error_csv_path = f"{stem} - error report.csv"
+
+    fieldnames = list(failures[0][0].keys())
+
+    with open(error_csv_path, "w", newline="", encoding="utf-8") as f:
+        writer = csv.DictWriter(f, fieldnames=fieldnames, quoting=csv.QUOTE_ALL)
+        writer.writeheader()
+        for track, _ in failures:
+            writer.writerow(track)
+
+    print(f"Error CSV saved to: {error_csv_path}")
 
 
 def _read_catalog(csv_path: str) -> list[dict[str, str]]:
