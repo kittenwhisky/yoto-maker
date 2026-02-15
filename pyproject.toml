@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=68.0", "setuptools-scm"]
+build-backend = "setuptools.backends._legacy:_Backend"
+
+[project]
+name = "yoto-maker"
+version = "0.1.0"
+description = "Download audio from YouTube playlists as MP3 files"
+requires-python = ">=3.12"
+dependencies = [
+    "yt-dlp",
+    "InquirerPy",
+]
+
+[project.scripts]
+yoto-maker = "yoto_maker.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
