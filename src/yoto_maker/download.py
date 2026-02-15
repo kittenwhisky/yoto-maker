@@ -85,6 +85,8 @@ def _download_single(url: str, title: str, output_dir: str) -> None:
         ],
         "quiet": True,
         "no_warnings": True,
+        "js_runtimes": {"node": {}},
+        "remote_components": {"ejs:github"},
     }
 
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:

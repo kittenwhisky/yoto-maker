@@ -21,6 +21,8 @@ def generate_catalog(playlist_url: str, output_path: str) -> int:
         "quiet": True,
         "no_warnings": True,
         "extract_flat": "in_playlist",
+        "js_runtimes": {"node": {}},
+        "remote_components": {"ejs:github"},
     }
 
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
