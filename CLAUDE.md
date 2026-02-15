@@ -42,3 +42,23 @@ When decisions are made during a chat session — such as technology choices, sc
 - `docs/chat/decisions.md` — All key decisions with rationale
 
 Review these files at the start of each session to understand project context.
+
+## Commands
+
+```bash
+pip install -e .     # Install in editable mode (run from project root)
+yoto-maker           # Launch interactive CLI menu
+```
+
+## Module Responsibilities
+
+- `cli.py` — Entry point (`main()`). InquirerPy menu with two flows: catalog and download.
+- `catalog.py` — `generate_catalog(playlist_url, output_path) -> int`. Extracts playlist metadata via yt-dlp, writes CSV.
+- `download.py` — `download_tracks(csv_path, output_dir) -> None`. Reads CSV, downloads each track as MP3 via yt-dlp + ffmpeg.
+
+## Conventions
+
+- CSV columns: `track_number`, `title`, `url` (all values quoted)
+- MP3 filenames: `{title}.mp3`
+- yt-dlp is used via Python API (`import yt_dlp`), not subprocess
+- No cross-dependencies between catalog and download modules
