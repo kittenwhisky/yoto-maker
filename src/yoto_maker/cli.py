@@ -50,7 +50,8 @@ def _download_flow() -> None:
 
     output_dir = inquirer.text(
         message="Output directory:",
-        default="./output",
+        validate=lambda val: len(val.strip()) > 0,
+        invalid_message="Output directory cannot be empty.",
     ).execute()
 
     download_tracks(csv_path.strip().strip("\"'"), output_dir.strip().strip("\"'"))
