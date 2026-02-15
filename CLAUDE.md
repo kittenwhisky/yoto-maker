@@ -56,9 +56,16 @@ yoto-maker           # Launch interactive CLI menu
 - `catalog.py` — `generate_catalog(playlist_url, output_path) -> int`. Extracts playlist metadata via yt-dlp, writes CSV.
 - `download.py` — `download_tracks(csv_path, output_dir) -> None`. Reads CSV, downloads each track as MP3 via yt-dlp + ffmpeg.
 
+## Runtime Dependencies
+
+- **Node.js** must be installed — yt-dlp requires it to solve YouTube player challenges
+- yt-dlp options `js_runtimes: {"node": {}}` and `remote_components: {"ejs:github"}` must be set in all `yt_dlp.YoutubeDL` calls
+
 ## Conventions
 
 - CSV columns: `track_number`, `title`, `url` (all values quoted)
+- CSV reading uses `utf-8-sig` encoding to handle BOM from Excel-saved files
 - MP3 filenames: `{title}.mp3`
+- CLI path inputs are stripped of both whitespace and quote characters (`"`, `'`)
 - yt-dlp is used via Python API (`import yt_dlp`), not subprocess
 - No cross-dependencies between catalog and download modules

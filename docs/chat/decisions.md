@@ -34,6 +34,17 @@ Key decisions made during project planning. Future Claude sessions should append
 | Parallel phases | Phases 2, 3, 4 run in parallel | catalog.py, download.py, cli.py have no write-time dependencies. |
 | Documentation | README.md (extensive, for humans) + CLAUDE.md (succinct, for AI) | Different audiences, different detail levels. CLAUDE.md kept short for token efficiency. |
 
+## Bugfixes & Robustness (2026-02-15)
+
+| Decision | Choice | Rationale |
+|----------|--------|-----------|
+| CLI path quoting | Strip `"` and `'` from all path inputs in `cli.py` | Users paste paths with surrounding quotes from Windows Explorer / terminal. `.strip()` alone only removes whitespace. |
+| CSV encoding | `utf-8-sig` instead of `utf-8` in `download.py` | CSV files saved from Excel or other tools often include a UTF-8 BOM (`\xef\xbb\xbf`), which corrupts the first column name for `DictReader`. `utf-8-sig` strips it automatically. |
+| CSV header whitespace | Strip whitespace from `DictReader.fieldnames` | Defensive measure against headers with trailing/leading spaces. |
+| CSV column validation | Validate required columns exist before processing | Provides a clear error message with actual vs expected column names instead of a cryptic `KeyError`. |
+| yt-dlp JS runtime | Node.js via `js_runtimes: {"node": {}}` | YouTube now requires a JavaScript runtime for player challenge solving. Node.js is already installed on the dev machine. yt-dlp only enables `deno` by default. |
+| yt-dlp EJS solver | `remote_components: {"ejs:github"}` | yt-dlp needs the EJS challenge solver script to extract YouTube formats. This option auto-downloads it from GitHub on first use. |
+
 ## Naming
 
 | Decision | Choice | Rationale |

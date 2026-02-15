@@ -76,6 +76,7 @@ Library: **`inquirerpy`** (or **`rich` prompts**) for the interactive menu and i
 - **InquirerPy** — interactive menu prompts and user input
 - **yt-dlp** — YouTube metadata extraction & audio download
 - **ffmpeg** — audio conversion (yt-dlp uses it under the hood)
+- **Node.js** — required runtime for yt-dlp to solve YouTube player challenges (configured via `js_runtimes` and `remote_components` options)
 - **csv** — stdlib, for reading/writing the catalog
 
 ## Future: Yoto Upload (not in scope now)
