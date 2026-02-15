@@ -1,6 +1,7 @@
 """Batch download tracks from a validated CSV catalog as MP3 files."""
 
 import csv
+import glob
 import os
 
 import yt_dlp
@@ -37,6 +38,7 @@ def download_tracks(csv_path: str, output_dir: str) -> None:
             print(f"  [{i}/{total}] {title} \u2713")
         except Exception as exc:
             print(f"  [{i}/{total}] {title} \u2717 {exc}")
+            _cleanup_partial_files(output_dir, title)
             failures.append((track, str(exc)))
 
     if failures:
@@ -44,6 +46,17 @@ def download_tracks(csv_path: str, output_dir: str) -> None:
         _write_error_csv(csv_path, failures)
     else:
         print(f"\nAll {total} tracks downloaded successfully!")
+
+
+def _cleanup_partial_files(output_dir: str, title: str) -> None:
+    """Remove any leftover partial/temp files for a failed download."""
+    pattern = os.path.join(output_dir, glob.escape(title) + ".*")
+    for path in glob.glob(pattern):
+        if not path.endswith(".mp3"):
+            try:
+                os.remove(path)
+            except OSError:
+                pass
 
 
 def _print_error_report(failures: list[tuple[dict, str]], total: int) -> None:
