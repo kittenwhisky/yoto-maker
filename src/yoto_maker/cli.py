@@ -37,7 +37,7 @@ def _catalog_flow() -> None:
         default="tracks.csv",
     ).execute()
 
-    generate_catalog(playlist_url.strip(), output_path.strip())
+    generate_catalog(playlist_url.strip().strip("\"'"), output_path.strip().strip("\"'"))
 
 
 def _download_flow() -> None:
@@ -53,7 +53,7 @@ def _download_flow() -> None:
         default="./output",
     ).execute()
 
-    download_tracks(csv_path.strip(), output_dir.strip())
+    download_tracks(csv_path.strip().strip("\"'"), output_dir.strip().strip("\"'"))
 
 
 if __name__ == "__main__":
